@@ -1,121 +1,74 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
 import './App.css'
 
+const tasks = [
+  { title: 'Design login page', project: 'Website Redesign', status: 'In Progress', priority: 'High' },
+  { title: 'Write project brief', project: 'Mobile App', status: 'To Do', priority: 'Medium' },
+  { title: 'Review homepage', project: 'Website Redesign', status: 'Review', priority: 'Low' },
+  { title: 'Set up project', project: 'Mobile App', status: 'Done', priority: 'High' },
+]
+
+const columns = ['To Do', 'In Progress', 'Review', 'Done']
+
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <main className="app">
+      <aside className="sidebar">
+        <h1 className="brand">Task<span>Flow</span></h1>
+        <p className="nav-label">WORKSPACE</p>
+        <a className="nav-item active" href="#dashboard">▦ &nbsp; Dashboard</a>
+        <a className="nav-item" href="#board">▤ &nbsp; My Tasks</a>
+        <a className="nav-item" href="#projects">▧ &nbsp; Projects</a>
+        <div className="sidebar-bottom">⚙ &nbsp; Settings</div>
+      </aside>
 
-      <div className="ticks"></div>
+      <section className="content" id="dashboard">
+        <header className="topbar">
+          <div>
+            <p className="eyebrow">TUESDAY, OCTOBER 6</p>
+            <h2>Good morning, Deepanshu 👋</h2>
+          </div>
+          <button className="avatar" aria-label="Your profile">D</button>
+        </header>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        <div className="welcome">
+          <div>
+            <p className="eyebrow">YOUR WORKSPACE</p>
+            <h2>Make today productive.</h2>
+            <p>Keep track of your projects and move your best work forward.</p>
+          </div>
+          <button className="primary-button">＋ &nbsp; New task</button>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+
+        <div className="stats">
+          <article className="stat-card"><span>Total tasks</span><strong>24</strong><small>Across all projects</small></article>
+          <article className="stat-card"><span>In progress</span><strong>08</strong><small>Tasks being worked on</small></article>
+          <article className="stat-card"><span>Completed</span><strong>12</strong><small>Great work this month</small></article>
+          <article className="stat-card"><span>Overdue</span><strong>02</strong><small>Needs your attention</small></article>
+        </div>
+
+        <div className="board-heading" id="board">
+          <div><p className="eyebrow">OVERVIEW</p><h2>My task board</h2></div>
+          <button className="filter-button">☷ &nbsp; Filter</button>
+        </div>
+
+        <div className="board">
+          {columns.map((column) => (
+            <section className="column" key={column}>
+              <h3>{column}<span>{tasks.filter((task) => task.status === column).length}</span></h3>
+              {tasks.filter((task) => task.status === column).map((task) => (
+                <article className="task-card" key={task.title}>
+                  <span className={`priority ${task.priority.toLowerCase()}`}>{task.priority} priority</span>
+                  <h4>{task.title}</h4>
+                  <p>{task.project}</p>
+                  <div className="task-footer"><span>👤 &nbsp;You</span><span>Oct 10</span></div>
+                </article>
+              ))}
+              <button className="add-task">＋ Add task</button>
+            </section>
+          ))}
         </div>
       </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    </main>
   )
 }
 
