@@ -334,3 +334,58 @@ button {
     grid-template-columns: 1fr;
   }
 }
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #17203380;
+}
+
+.task-modal {
+  width: min(100%, 440px);
+  padding: 26px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 20px 60px #17203333;
+}
+
+.task-modal h2 {
+  margin: 0 0 22px;
+}
+
+.task-modal form,
+.task-modal label {
+  display: grid;
+  gap: 8px;
+}
+
+.task-modal form {
+  gap: 16px;
+}
+
+.task-modal label {
+  color: #596274;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.task-modal input,
+.task-modal select {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #dfe3ec;
+  border-radius: 8px;
+  background: #fff;
+  color: #20283a;
+  font: inherit;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}

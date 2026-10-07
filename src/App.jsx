@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import './App.css'
 
-const tasks = [
+const startingTasks = [
   { title: 'Design login page', project: 'Website Redesign', status: 'In Progress', priority: 'High' },
   { title: 'Write project brief', project: 'Mobile App', status: 'To Do', priority: 'Medium' },
   { title: 'Review homepage', project: 'Website Redesign', status: 'Review', priority: 'Low' },
@@ -10,6 +11,34 @@ const tasks = [
 const columns = ['To Do', 'In Progress', 'Review', 'Done']
 
 function App() {
+  const [tasks, setTasks] = useState(startingTasks)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [title, setTitle] = useState('')
+  const [project, setProject] = useState('')
+  const [priority, setPriority] = useState('Medium')
+
+  function handleAddTask(event) {
+    event.preventDefault()
+
+    if (!title.trim()) return
+
+    const newTask = {
+      title: title.trim(),
+      project: project.trim() || 'General',
+      status: 'To Do',
+      priority,
+    }
+
+    setTasks((currentTasks) => [newTask, ...currentTasks])
+    setTitle('')
+    setProject('')
+    setPriority('Medium')
+    setIsModalOpen(false)
+  }
+
+  const inProgressCount = tasks.filter((task) => task.status === 'In Progress').length
+  const completedCount = tasks.filter((task) => task.status === 'Done').length
+
   return (
     <main className="app">
       <aside className="sidebar">
@@ -36,14 +65,16 @@ function App() {
             <h2>Make today productive.</h2>
             <p>Keep track of your projects and move your best work forward.</p>
           </div>
-          <button className="primary-button">＋ &nbsp; New task</button>
+          <button className="primary-button" onClick={() => setIsModalOpen(true)}>
+            ＋ &nbsp; New task
+          </button>
         </div>
 
         <div className="stats">
-          <article className="stat-card"><span>Total tasks</span><strong>24</strong><small>Across all projects</small></article>
-          <article className="stat-card"><span>In progress</span><strong>08</strong><small>Tasks being worked on</small></article>
-          <article className="stat-card"><span>Completed</span><strong>12</strong><small>Great work this month</small></article>
-          <article className="stat-card"><span>Overdue</span><strong>02</strong><small>Needs your attention</small></article>
+          <article className="stat-card"><span>Total tasks</span><strong>{tasks.length}</strong><small>Across all projects</small></article>
+          <article className="stat-card"><span>In progress</span><strong>{inProgressCount}</strong><small>Tasks being worked on</small></article>
+          <article className="stat-card"><span>Completed</span><strong>{completedCount}</strong><small>Great work this month</small></article>
+          <article className="stat-card"><span>Overdue</span><strong>0</strong><small>Needs your attention</small></article>
         </div>
 
         <div className="board-heading" id="board">
@@ -55,19 +86,65 @@ function App() {
           {columns.map((column) => (
             <section className="column" key={column}>
               <h3>{column}<span>{tasks.filter((task) => task.status === column).length}</span></h3>
-              {tasks.filter((task) => task.status === column).map((task) => (
-                <article className="task-card" key={task.title}>
+              {tasks.filter((task) => task.status === column).map((task, index) => (
+                <article className="task-card" key={`${task.title}-${index}`}>
                   <span className={`priority ${task.priority.toLowerCase()}`}>{task.priority} priority</span>
                   <h4>{task.title}</h4>
                   <p>{task.project}</p>
                   <div className="task-footer"><span>👤 &nbsp;You</span><span>Oct 10</span></div>
                 </article>
               ))}
-              <button className="add-task">＋ Add task</button>
+              <button className="add-task" onClick={() => setIsModalOpen(true)}>＋ Add task</button>
             </section>
           ))}
         </div>
       </section>
+
+      {isModalOpen && (
+        <div className="modal-backdrop" onClick={() => setIsModalOpen(false)}>
+          <section
+            className="task-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <h2 id="modal-title">Create a task</h2>
+            <form onSubmit={handleAddTask}>
+              <label>
+                Task name
+                <input
+                  autoFocus
+                  value={title}
+                  onChange={(event) => setTitle(event.target.value)}
+                  placeholder="e.g. Design the homepage"
+                  required
+                />
+              </label>
+              <label>
+                Project
+                <input
+                  value={project}
+                  onChange={(event) => setProject(event.target.value)}
+                  placeholder="e.g. Website Redesign"
+                />
+              </label>
+              <label>
+                Priority
+                <select value={priority} onChange={(event) => setPriority(event.target.value)}>
+                  <option>Low</option>
+                  <option>Medium</option>
+                  <option>High</option>
+                </select>
+              </label>
+              <div className="modal-actions">
+                <button type="button" className="filter-button" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                <button type="submit" className="primary-button">Save task</button>
+              </div>
+            </form>
+          </section>
+        </div>
+      )}
     </main>
   )
 }
