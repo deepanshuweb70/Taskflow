@@ -389,3 +389,19 @@ button {
   gap: 10px;
   margin-top: 8px;
 }
+
+.delete-task {
+  margin-top: 12px;
+  padding: 7px 10px;
+  border: 1px solid #f1cbd0;
+  border-radius: 7px;
+  color: #c74350;
+  background: #fff;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.delete-task:hover {
+  background: #fff1f2;
+}

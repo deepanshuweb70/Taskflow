@@ -17,6 +17,12 @@ function App() {
   const [project, setProject] = useState('')
   const [priority, setPriority] = useState('Medium')
 
+    function handleDeleteTask(taskToDelete) {
+    setTasks((currentTasks) =>
+      currentTasks.filter((task) => task !== taskToDelete)
+    )
+  }
+
   function handleAddTask(event) {
     event.preventDefault()
 
@@ -33,7 +39,7 @@ function App() {
     setTitle('')
     setProject('')
     setPriority('Medium')
-    setIsModalOpen(false)
+    setIsModalOpen(false) 
   }
 
   const inProgressCount = tasks.filter((task) => task.status === 'In Progress').length
@@ -92,6 +98,13 @@ function App() {
                   <h4>{task.title}</h4>
                   <p>{task.project}</p>
                   <div className="task-footer"><span>👤 &nbsp;You</span><span>Oct 10</span></div>
+                   <button
+                    type="button"
+                    className="delete-task"
+                    onClick={() => handleDeleteTask(task)}
+                  >
+                    Delete
+                  </button>
                 </article>
               ))}
               <button className="add-task" onClick={() => setIsModalOpen(true)}>＋ Add task</button>
