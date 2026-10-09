@@ -16,6 +16,7 @@ function App() {
   const [title, setTitle] = useState('')
   const [project, setProject] = useState('')
   const [priority, setPriority] = useState('Medium')
+  const [editingTask, setEditingTask] = useState(null)
 
     function handleDeleteTask(taskToDelete) {
     setTasks((currentTasks) =>
@@ -23,11 +24,42 @@ function App() {
     )
   }
 
+    function handleStartCreate() {
+    setEditingTask(null)
+    setTitle('')
+    setProject('')
+    setPriority('Medium')
+    setIsModalOpen(true)
+  }
+
+
+  function handleStartEdit(task) {
+  setEditingTask(task)
+  setTitle(task.title)
+  setProject(task.project)
+  setPriority(task.priority)
+  setIsModalOpen(true)
+}
+
   function handleAddTask(event) {
-    event.preventDefault()
+  event.preventDefault()
 
-    if (!title.trim()) return
+  if (!title.trim()) return
 
+  if (editingTask) {
+    setTasks((currentTasks) =>
+      currentTasks.map((task) =>
+        task === editingTask
+          ? {
+              ...task,
+              title: title.trim(),
+              project: project.trim() || 'General',
+              priority,
+            }
+          : task
+      )
+    )
+  } else {
     const newTask = {
       title: title.trim(),
       project: project.trim() || 'General',
@@ -36,12 +68,14 @@ function App() {
     }
 
     setTasks((currentTasks) => [newTask, ...currentTasks])
-    setTitle('')
-    setProject('')
-    setPriority('Medium')
-    setIsModalOpen(false) 
   }
 
+  setEditingTask(null)
+  setTitle('')
+  setProject('')
+  setPriority('Medium')
+  setIsModalOpen(false)
+}
   const inProgressCount = tasks.filter((task) => task.status === 'In Progress').length
   const completedCount = tasks.filter((task) => task.status === 'Done').length
 
@@ -71,7 +105,7 @@ function App() {
             <h2>Make today productive.</h2>
             <p>Keep track of your projects and move your best work forward.</p>
           </div>
-          <button className="primary-button" onClick={() => setIsModalOpen(true)}>
+          <button className="primary-button" onClick={handleStartCreate}>
             ＋ &nbsp; New task
           </button>
         </div>
@@ -98,16 +132,26 @@ function App() {
                   <h4>{task.title}</h4>
                   <p>{task.project}</p>
                   <div className="task-footer"><span>👤 &nbsp;You</span><span>Oct 10</span></div>
+                  <div className="task-actions">
                    <button
+                    type="button"
+                    className="edit-task"
+                    onClick={() => handleStartEdit(task)}
+                  >
+                    
+                    Edit
+                  </button>
+                  <button
                     type="button"
                     className="delete-task"
                     onClick={() => handleDeleteTask(task)}
                   >
                     Delete
                   </button>
+                  </div> 
                 </article>
               ))}
-              <button className="add-task" onClick={() => setIsModalOpen(true)}>＋ Add task</button>
+              <button className="add-task" onClick={handleStartCreate}>＋ Add task</button>
             </section>
           ))}
         </div>
@@ -122,7 +166,7 @@ function App() {
             aria-labelledby="modal-title"
             onClick={(event) => event.stopPropagation()}
           >
-            <h2 id="modal-title">Create a task</h2>
+           <h2 id="modal-title">{editingTask ? 'Edit task' : 'Create a task'}</h2>
             <form onSubmit={handleAddTask}>
               <label>
                 Task name
@@ -152,7 +196,9 @@ function App() {
               </label>
               <div className="modal-actions">
                 <button type="button" className="filter-button" onClick={() => setIsModalOpen(false)}>Cancel</button>
-                <button type="submit" className="primary-button">Save task</button>
+                <button type="submit" className="primary-button">
+                {editingTask ? 'Save changes' : 'Save task'}
+                </button>
               </div>
             </form>
           </section>

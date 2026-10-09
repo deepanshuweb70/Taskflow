@@ -403,5 +403,43 @@ button {
 }
 
 .delete-task:hover {
-  background: #fff1f2;
+  background: #2d0d10;
+}
+
+.task-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.task-actions button {
+  min-width: 72px;
+  padding: 7px 12px;
+  border: 1px solid;
+  border-radius: 7px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  height: 39px;
+    margin: 12px 0px 0px;
+}
+
+.task-actions .edit-task {
+  border-color: #dcd9ff;
+  color: #554be0;
+}
+
+.task-actions .edit-task:hover {
+  background: #f3f2ff;
+}
+
+.task-actions .delete-task {
+  border-color: #f1cbd0;
+  color: #c74350;
+}
+
+.task-actions .delete-task:hover {
+  background: #dfd7d7;
 }
