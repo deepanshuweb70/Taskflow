@@ -41,6 +41,16 @@ function App() {
   setIsModalOpen(true)
 }
 
+function handleChangeStatus(taskToUpdate, newStatus) {
+  setTasks((currentTasks) =>
+    currentTasks.map((task) =>
+      task === taskToUpdate
+        ? { ...task, status: newStatus }
+        : task
+    )
+  )
+}
+
   function handleAddTask(event) {
   event.preventDefault()
 
@@ -130,6 +140,16 @@ function App() {
                 <article className="task-card" key={`${task.title}-${index}`}>
                   <span className={`priority ${task.priority.toLowerCase()}`}>{task.priority} priority</span>
                   <h4>{task.title}</h4>
+                   <select
+                    className="status-select"
+                    value={task.status}
+                    onChange={(event) => handleChangeStatus(task, event.target.value)}
+                    aria-label={`Change status for ${task.title}`}
+                  >
+                    {columns.map((status) => (
+                      <option key={status} value={status}>{status}</option>
+                    ))}
+                  </select>
                   <p>{task.project}</p>
                   <div className="task-footer"><span>👤 &nbsp;You</span><span>Oct 10</span></div>
                   <div className="task-actions">

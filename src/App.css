@@ -443,3 +443,14 @@ button {
 .task-actions .delete-task:hover {
   background: #dfd7d7;
 }
+
+.status-select {
+  width: 100%;
+  margin-top: 10px;
+  padding: 7px 9px;
+  border: 1px solid #e2e6ee;
+  border-radius: 7px;
+  color: #596274;
+  background: #fff;
+  font-size: 12px;
+}
