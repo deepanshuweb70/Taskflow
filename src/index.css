@@ -109,3 +109,32 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+.board-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.board-controls input,
+.board-controls select {
+  min-width: 145px;
+  padding: 9px 11px;
+  border: 1px solid #e2e6ee;
+  border-radius: 8px;
+  color: #596274;
+  background: #fff;
+  font: inherit;
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .board-controls {
+    width: 100%;
+  }
+
+  .board-controls input,
+  .board-controls select {
+    flex: 1 1 100%;
+  }
+}

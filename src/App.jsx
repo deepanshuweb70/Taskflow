@@ -17,6 +17,9 @@ function App() {
   const [project, setProject] = useState('')
   const [priority, setPriority] = useState('Medium')
   const [editingTask, setEditingTask] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState('All')
+  const [priorityFilter, setPriorityFilter] = useState('All')
 
     function handleDeleteTask(taskToDelete) {
     setTasks((currentTasks) =>
@@ -89,6 +92,22 @@ function handleChangeStatus(taskToUpdate, newStatus) {
   const inProgressCount = tasks.filter((task) => task.status === 'In Progress').length
   const completedCount = tasks.filter((task) => task.status === 'Done').length
 
+  const filteredTasks = tasks.filter((task) => {
+  const query = searchTerm.trim().toLowerCase()
+
+  const matchesSearch =
+    task.title.toLowerCase().includes(query) ||
+    task.project.toLowerCase().includes(query)
+
+  const matchesStatus =
+    statusFilter === 'All' || task.status === statusFilter
+
+  const matchesPriority =
+    priorityFilter === 'All' || task.priority === priorityFilter
+
+  return matchesSearch && matchesStatus && matchesPriority
+})
+
   return (
     <main className="app">
       <aside className="sidebar">
@@ -129,14 +148,45 @@ function handleChangeStatus(taskToUpdate, newStatus) {
 
         <div className="board-heading" id="board">
           <div><p className="eyebrow">OVERVIEW</p><h2>My task board</h2></div>
-          <button className="filter-button">☷ &nbsp; Filter</button>
+          <div className="board-controls">
+              <input
+              className="search-input"
+              type="search"
+              placeholder="Search tasks..."
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              aria-label="Search tasks"
+           />
+
+        <select
+             value={statusFilter}
+             onChange={(event) => setStatusFilter(event.target.value)}
+             aria-label="Filter by status"
+       >
+             <option value="All">All statuses</option>
+             {columns.map((status) => (
+             <option key={status} value={status}>{status}</option>
+         ))}
+       </select>
+
+       <select
+              value={priorityFilter}
+              onChange={(event) => setPriorityFilter(event.target.value)}
+              aria-label="Filter by priority"
+       >
+              <option value="All">All priorities</option>
+              <option value="Low">Low priority</option>
+              <option value="Medium">Medium priority</option>
+              <option value="High">High priority</option>
+       </select>
+      </div>
         </div>
 
         <div className="board">
           {columns.map((column) => (
             <section className="column" key={column}>
-              <h3>{column}<span>{tasks.filter((task) => task.status === column).length}</span></h3>
-              {tasks.filter((task) => task.status === column).map((task, index) => (
+              <h3>{column}<span>{filteredTasks.filter((task) => task.status === column).length}</span></h3>
+              {filteredTasks.filter((task) => task.status === column).map((task, index) => (
                 <article className="task-card" key={`${task.title}-${index}`}>
                   <span className={`priority ${task.priority.toLowerCase()}`}>{task.priority} priority</span>
                   <h4>{task.title}</h4>
