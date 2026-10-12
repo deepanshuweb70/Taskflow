@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 const startingTasks = [
@@ -11,7 +11,14 @@ const startingTasks = [
 const columns = ['To Do', 'In Progress', 'Review', 'Done']
 
 function App() {
-  const [tasks, setTasks] = useState(startingTasks)
+ const [tasks, setTasks] = useState(() => {
+  try {
+    const savedTasks = localStorage.getItem('taskflow-tasks')
+    return savedTasks ? JSON.parse(savedTasks) : startingTasks
+  } catch {
+    return startingTasks
+  }
+})
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [project, setProject] = useState('')
@@ -20,6 +27,10 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('All')
   const [priorityFilter, setPriorityFilter] = useState('All')
+
+    useEffect(() => {
+    localStorage.setItem('taskflow-tasks', JSON.stringify(tasks))
+  }, [tasks])
 
     function handleDeleteTask(taskToDelete) {
     setTasks((currentTasks) =>
