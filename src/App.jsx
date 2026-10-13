@@ -1,24 +1,21 @@
 import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  addTask,
+  changeTaskStatus,
+  deleteTask,
+  updateTask,
+} from './features/tasks/tasksSlice'
 import './App.css'
 
-const startingTasks = [
-  { title: 'Design login page', project: 'Website Redesign', status: 'In Progress', priority: 'High' },
-  { title: 'Write project brief', project: 'Mobile App', status: 'To Do', priority: 'Medium' },
-  { title: 'Review homepage', project: 'Website Redesign', status: 'Review', priority: 'Low' },
-  { title: 'Set up project', project: 'Mobile App', status: 'Done', priority: 'High' },
-]
+// const startingTasks = []
+ 
 
 const columns = ['To Do', 'In Progress', 'Review', 'Done']
 
 function App() {
- const [tasks, setTasks] = useState(() => {
-  try {
-    const savedTasks = localStorage.getItem('taskflow-tasks')
-    return savedTasks ? JSON.parse(savedTasks) : startingTasks
-  } catch {
-    return startingTasks
-  }
-})
+  const tasks = useSelector((state) => state.tasks)
+  const dispatch = useDispatch()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [project, setProject] = useState('')
@@ -32,11 +29,9 @@ function App() {
     localStorage.setItem('taskflow-tasks', JSON.stringify(tasks))
   }, [tasks])
 
-    function handleDeleteTask(taskToDelete) {
-    setTasks((currentTasks) =>
-      currentTasks.filter((task) => task !== taskToDelete)
-    )
-  }
+   function handleDeleteTask(taskToDelete) {
+  dispatch(deleteTask(taskToDelete.id))
+}
 
     function handleStartCreate() {
     setEditingTask(null)
@@ -56,42 +51,40 @@ function App() {
 }
 
 function handleChangeStatus(taskToUpdate, newStatus) {
-  setTasks((currentTasks) =>
-    currentTasks.map((task) =>
-      task === taskToUpdate
-        ? { ...task, status: newStatus }
-        : task
-    )
+  dispatch(
+    changeTaskStatus({
+      id: taskToUpdate.id,
+      status: newStatus,
+    })
   )
 }
 
-  function handleAddTask(event) {
+function handleAddTask(event) {
   event.preventDefault()
 
   if (!title.trim()) return
 
   if (editingTask) {
-    setTasks((currentTasks) =>
-      currentTasks.map((task) =>
-        task === editingTask
-          ? {
-              ...task,
-              title: title.trim(),
-              project: project.trim() || 'General',
-              priority,
-            }
-          : task
-      )
+    dispatch(
+      updateTask({
+        id: editingTask.id,
+        changes: {
+          title: title.trim(),
+          project: project.trim() || 'General',
+          priority,
+        },
+      })
     )
   } else {
-    const newTask = {
-      title: title.trim(),
-      project: project.trim() || 'General',
-      status: 'To Do',
-      priority,
-    }
-
-    setTasks((currentTasks) => [newTask, ...currentTasks])
+    dispatch(
+      addTask({
+        id: crypto.randomUUID(),
+        title: title.trim(),
+        project: project.trim() || 'General',
+        status: 'To Do',
+        priority,
+      })
+    )
   }
 
   setEditingTask(null)
@@ -100,6 +93,8 @@ function handleChangeStatus(taskToUpdate, newStatus) {
   setPriority('Medium')
   setIsModalOpen(false)
 }
+
+
   const inProgressCount = tasks.filter((task) => task.status === 'In Progress').length
   const completedCount = tasks.filter((task) => task.status === 'Done').length
 
