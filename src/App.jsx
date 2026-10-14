@@ -24,10 +24,24 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('All')
   const [priorityFilter, setPriorityFilter] = useState('All')
+  const [theme, setTheme] = useState(() => {
+  const savedTheme = localStorage.getItem('taskflow-theme')
+
+  if (savedTheme) return savedTheme
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light'
+})
 
     useEffect(() => {
     localStorage.setItem('taskflow-tasks', JSON.stringify(tasks))
   }, [tasks])
+
+    useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    localStorage.setItem('taskflow-theme', theme)
+  }, [theme])
 
    function handleDeleteTask(taskToDelete) {
   dispatch(deleteTask(taskToDelete.id))
@@ -131,7 +145,16 @@ function handleAddTask(event) {
             <p className="eyebrow">TUESDAY, OCTOBER 6</p>
             <h2>Good morning, Deepanshu 👋</h2>
           </div>
-          <button className="avatar" aria-label="Your profile">D</button>
+          <div className="topbar-actions">
+          <button
+              className="theme-toggle"
+              type="button"
+              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+          >
+              {theme === 'light' ? '🌙 Dark mode' : '☀️ Light mode'}
+              </button>
+              <button className="avatar" aria-label="Your profile">D</button>
+          </div>
         </header>
 
         <div className="welcome">

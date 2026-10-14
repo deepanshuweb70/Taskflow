@@ -454,3 +454,77 @@ button {
   background: #fff;
   font-size: 12px;
 }
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-toggle {
+  padding: 9px 12px;
+  border: 1px solid #e2e6ee;
+  border-radius: 8px;
+  color: #596274;
+  background: #fff;
+  font-size: 13px;
+}
+
+html[data-theme="dark"] body {
+  background: #111827;
+  color: #e5e7eb;
+}
+
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .task-card,
+html[data-theme="dark"] .task-modal {
+  color: #e5e7eb;
+  background: #1f2937;
+  border-color: #374151;
+}
+
+html[data-theme="dark"] .column {
+  background: #182231;
+}
+
+html[data-theme="dark"] .stat-card strong,
+html[data-theme="dark"] .task-card h4,
+html[data-theme="dark"] .column h3,
+html[data-theme="dark"] .task-modal h2 {
+  color: #f3f4f6;
+}
+
+html[data-theme="dark"] .nav-item:not(.active),
+html[data-theme="dark"] .sidebar-bottom,
+html[data-theme="dark"] .task-card p,
+html[data-theme="dark"] .task-footer {
+  color: #cbd5e1;
+}
+
+html[data-theme="dark"] .filter-button,
+html[data-theme="dark"] .status-select,
+html[data-theme="dark"] .board-controls input,
+html[data-theme="dark"] .board-controls select,
+html[data-theme="dark"] .task-modal input,
+html[data-theme="dark"] .task-modal select,
+html[data-theme="dark"] .theme-toggle {
+  color: #e5e7eb;
+  background: #273449;
+  border-color: #475569;
+}
+
+html[data-theme="dark"] .task-actions button {
+  background: #273449;
+}
+
+@media (max-width: 640px) {
+  .topbar-actions {
+    gap: 7px;
+  }
+
+  .theme-toggle {
+    padding: 8px;
+    font-size: 12px;
+  }
+}
