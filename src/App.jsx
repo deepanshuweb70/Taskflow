@@ -6,6 +6,7 @@ import {
   deleteTask,
   updateTask,
 } from './features/tasks/tasksSlice'
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
 import './App.css'
 
 // const startingTasks = []
@@ -33,6 +34,11 @@ function App() {
     ? 'dark'
     : 'light'
 })
+
+const statusChartData = ['To Do', 'In Progress', 'Review', 'Done'].map((status) => ({
+  status,
+  total: tasks.filter((task) => task.status === status).length,
+}))
 
     useEffect(() => {
     localStorage.setItem('taskflow-tasks', JSON.stringify(tasks))
@@ -174,6 +180,21 @@ function handleAddTask(event) {
           <article className="stat-card"><span>Completed</span><strong>{completedCount}</strong><small>Great work this month</small></article>
           <article className="stat-card"><span>Overdue</span><strong>0</strong><small>Needs your attention</small></article>
         </div>
+
+                <section className="chart-card">
+          <h2>Tasks by status</h2>
+          <div style={{ width: '100%', height: 280 }}>
+            <ResponsiveContainer>
+              <BarChart data={statusChartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="status" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Bar dataKey="total" fill="#6258e8" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
 
         <div className="board-heading" id="board">
           <div><p className="eyebrow">OVERVIEW</p><h2>My task board</h2></div>
