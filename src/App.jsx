@@ -7,12 +7,36 @@ import {
   updateTask,
 } from './features/tasks/tasksSlice'
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
+import { useDraggable, useDroppable, DragDropProvider } from '@dnd-kit/react'
 import './App.css'
 
 // const startingTasks = []
  
 
 const columns = ['To Do', 'In Progress', 'Review', 'Done']
+
+function DraggableTask({ id, children }) {
+  const { ref } = useDraggable({ id })
+
+  return (
+    <article ref={ref} className="task-card">
+      {children}
+    </article>
+  )
+}
+
+function DroppableColumn({ id, children }) {
+  const { ref, isDropTarget } = useDroppable({ id })
+
+  return (
+    <section
+      ref={ref}
+      className={`column ${isDropTarget ? 'drop-target' : ''}`}
+    >
+      {children}
+    </section>
+  )
+}
 
 function App() {
   const tasks = useSelector((state) => state.tasks)
@@ -74,6 +98,23 @@ function handleChangeStatus(taskToUpdate, newStatus) {
   dispatch(
     changeTaskStatus({
       id: taskToUpdate.id,
+      status: newStatus,
+    })
+  )
+}
+
+function handleDragEnd(event) {
+  if (event.canceled) return
+
+  const taskId = event.operation.source.id
+  const newStatus = event.operation.target?.id
+  const draggedTask = tasks.find((task) => String(task.id) === String(taskId))
+
+  if (!draggedTask || !columns.includes(newStatus)) return
+
+  dispatch(
+    changeTaskStatus({
+      id: draggedTask.id,
       status: newStatus,
     })
   )
@@ -232,12 +273,14 @@ function handleAddTask(event) {
       </div>
         </div>
 
+
+        <DragDropProvider onDragEnd={handleDragEnd}>
         <div className="board">
           {columns.map((column) => (
-            <section className="column" key={column}>
+            <DroppableColumn id={column} key={column}>
               <h3>{column}<span>{filteredTasks.filter((task) => task.status === column).length}</span></h3>
               {filteredTasks.filter((task) => task.status === column).map((task, index) => (
-                <article className="task-card" key={`${task.title}-${index}`}>
+               <DraggableTask id={task.id} key={task.id}> 
                   <span className={`priority ${task.priority.toLowerCase()}`}>{task.priority} priority</span>
                   <h4>{task.title}</h4>
                    <select
@@ -269,12 +312,13 @@ function handleAddTask(event) {
                     Delete
                   </button>
                   </div> 
-                </article>
+                </DraggableTask>
               ))}
               <button className="add-task" onClick={handleStartCreate}>＋ Add task</button>
-            </section>
+            </DroppableColumn>
           ))}
         </div>
+        </DragDropProvider>
       </section>
 
       {isModalOpen && (
