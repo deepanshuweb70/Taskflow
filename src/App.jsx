@@ -222,7 +222,7 @@ function handleAddTask(event) {
           <article className="stat-card"><span>Overdue</span><strong>0</strong><small>Needs your attention</small></article>
         </div>
 
-                <section className="chart-card">
+        <section className="chart-card rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:p-6">
           <h2>Tasks by status</h2>
           <div style={{ width: '100%', height: 280 }}>
             <ResponsiveContainer>
