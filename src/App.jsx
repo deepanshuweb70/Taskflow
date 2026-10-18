@@ -45,6 +45,7 @@ function App() {
   const [title, setTitle] = useState('')
   const [project, setProject] = useState('')
   const [priority, setPriority] = useState('Medium')
+  const [dueDate, setDueDate] = useState('')
   const [editingTask, setEditingTask] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('All')
@@ -64,6 +65,20 @@ const statusChartData = ['To Do', 'In Progress', 'Review', 'Done'].map((status) 
   total: tasks.filter((task) => task.status === status).length,
 }))
 
+const calendarDate = new Date()
+const calendarYear = calendarDate.getFullYear()
+const calendarMonth = calendarDate.getMonth()
+const calendarTitle = calendarDate.toLocaleDateString('en-US', {
+  month: 'long',
+  year: 'numeric',
+})
+const firstWeekday = new Date(calendarYear, calendarMonth, 1).getDay()
+const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate()
+const calendarCells = [
+  ...Array(firstWeekday).fill(null),
+  ...Array.from({ length: daysInMonth }, (_, index) => index + 1),
+]
+
     useEffect(() => {
     localStorage.setItem('taskflow-tasks', JSON.stringify(tasks))
   }, [tasks])
@@ -82,6 +97,7 @@ const statusChartData = ['To Do', 'In Progress', 'Review', 'Done'].map((status) 
     setTitle('')
     setProject('')
     setPriority('Medium')
+    setDueDate('')
     setIsModalOpen(true)
   }
 
@@ -91,6 +107,7 @@ const statusChartData = ['To Do', 'In Progress', 'Review', 'Done'].map((status) 
   setTitle(task.title)
   setProject(task.project)
   setPriority(task.priority)
+  setDueDate(task.dueDate || '')
   setIsModalOpen(true)
 }
 
@@ -133,6 +150,7 @@ function handleAddTask(event) {
           title: title.trim(),
           project: project.trim() || 'General',
           priority,
+          dueDate,
         },
       })
     )
@@ -144,6 +162,7 @@ function handleAddTask(event) {
         project: project.trim() || 'General',
         status: 'To Do',
         priority,
+        dueDate,
       })
     )
   }
@@ -152,6 +171,7 @@ function handleAddTask(event) {
   setTitle('')
   setProject('')
   setPriority('Medium')
+  setDueDate('')
   setIsModalOpen(false)
 }
 
@@ -183,6 +203,7 @@ function handleAddTask(event) {
         <a className="nav-item active" href="#dashboard">▦ &nbsp; Dashboard</a>
         <a className="nav-item" href="#board">▤ &nbsp; My Tasks</a>
         <a className="nav-item" href="#projects">▧ &nbsp; Projects</a>
+        <a className="nav-item" href="#calendar">📅 &nbsp; Calendar</a>
         <div className="sidebar-bottom">⚙ &nbsp; Settings</div>
       </aside>
 
@@ -236,6 +257,40 @@ function handleAddTask(event) {
             </ResponsiveContainer>
           </div>
         </section>
+
+        <section className="calendar-section" id="calendar">
+  <div className="calendar-header">
+    <div>
+      <p className="eyebrow">PLANNER</p>
+      <h2>Calendar</h2>
+    </div>
+    <strong>{calendarTitle}</strong>
+  </div>
+
+  <div className="calendar-grid">
+    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+      <div className="calendar-weekday" key={day}>{day}</div>
+    ))}
+
+    {calendarCells.map((day, index) => {
+      if (day === null) {
+        return <div className="calendar-day empty" key={`empty-${index}`} />
+      }
+
+      const dateKey = `${calendarYear}-${String(calendarMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+      const dayTasks = tasks.filter((task) => task.dueDate === dateKey)
+
+      return (
+        <div className="calendar-day" key={dateKey}>
+          <span>{day}</span>
+          {dayTasks.map((task) => (
+            <small key={task.id}>{task.title}</small>
+          ))}
+        </div>
+      )
+    })}
+  </div>
+</section>
 
         <div className="board-heading" id="board">
           <div><p className="eyebrow">OVERVIEW</p><h2>My task board</h2></div>
@@ -294,7 +349,17 @@ function handleAddTask(event) {
                     ))}
                   </select>
                   <p>{task.project}</p>
-                  <div className="task-footer"><span>👤 &nbsp;You</span><span>Oct 10</span></div>
+                  <div className="task-footer">
+                  <span>👤 &nbsp;You</span>
+                  <span>
+                  {task.dueDate
+                       ? new Date(`${task.dueDate}T00:00:00`).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                        })
+                       : 'No date'}
+                   </span>
+                   </div>
                   <div className="task-actions">
                    <button
                     type="button"
@@ -358,6 +423,14 @@ function handleAddTask(event) {
                   <option>High</option>
                 </select>
               </label>
+              <label>
+             Due date
+             <input
+               type="date"
+               value={dueDate}
+                onChange={(event) => setDueDate(event.target.value)}
+                />
+               </label>
               <div className="modal-actions">
                 <button type="button" className="filter-button" onClick={() => setIsModalOpen(false)}>Cancel</button>
                 <button type="submit" className="primary-button">

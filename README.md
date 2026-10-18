@@ -1,16 +1,33 @@
-# React + Vite
+# TaskFlow
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A smart project management dashboard built with React. Organize tasks on a Kanban board, track their status, and view task counts in a chart.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Create, edit, and delete tasks
+- Move tasks between To Do, In Progress, Review, and Done
+- Drag and drop tasks between status columns
+- Search and filter tasks
+- View task counts by status in a chart
+- Switch between light and dark themes
+- Save tasks in the browser so they remain after refresh
+- Responsive dashboard layout
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React and Vite
+- Redux Toolkit
+- Tailwind CSS and custom CSS
+- Recharts
+- dnd-kit
 
-## Expanding the Oxlint configuration
+## Run Locally
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```bash
+npm install
+npm run dev
+```
+
+## Repository
+
+[GitHub: TaskFlow](https://github.com/deepanshuweb70/Taskflow)

@@ -562,3 +562,93 @@ html[data-theme="dark"] .task-actions button {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+.calendar-section {
+  margin: 24px 0;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgb(15 23 42 / 8%);
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.calendar-weekday {
+  padding: 8px 4px;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.calendar-day {
+  display: flex;
+  min-height: 88px;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+  padding: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.calendar-day > span {
+  font-weight: 700;
+}
+
+.calendar-day small {
+  overflow-wrap: anywhere;
+  padding: 4px;
+  border-radius: 6px;
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.calendar-day.empty {
+  border-color: transparent;
+  background: transparent;
+}
+
+html[data-theme="dark"] .calendar-section {
+  border-color: #334155;
+  background: #1e293b;
+  color: #f1f5f9;
+}
+
+html[data-theme="dark"] .calendar-day {
+  border-color: #334155;
+  background: #0f172a;
+}
+
+@media (max-width: 600px) {
+  .calendar-section {
+    padding: 12px;
+  }
+
+  .calendar-grid {
+    gap: 4px;
+  }
+
+  .calendar-day {
+    min-height: 68px;
+    padding: 4px;
+  }
+
+  .calendar-day small {
+    font-size: 0.65rem;
+  }
+}
