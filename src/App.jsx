@@ -24,7 +24,7 @@ function DraggableTask({ id, children }) {
     </article>
   )
 }
-
+ 
 function DroppableColumn({ id, children }) {
   const { ref, isDropTarget } = useDroppable({ id })
 
